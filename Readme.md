@@ -1,3 +1,3 @@
 ```bash
-pyinstaller --onefile --noconsole --add-data "templates;templates" --add-data "static;static" app.py
+pyinstaller --onefile --noconsole --add-data "templates;templates" --add-data "static;static" app.py --add-data ".env;."
 ```
