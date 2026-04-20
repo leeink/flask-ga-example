@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ site_name }}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ ga_id }}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', '{{ ga_id }}');
+    </script>
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a class="nav-logo" href="/">{{ site_name }}</a>
+            <ul class="nav-bar">
+                <li><a class="nav-link" href="/">메뉴 1</a></li>
+                <li><a class="nav-link" href="/">메뉴 2</a></li>
+                <li><a class="nav-link" href="/">메뉴 3</a></li>
+                <li><a class="nav-link" href="/">메뉴 4</a></li>
+            </ul>
+        </div>
+    </nav>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

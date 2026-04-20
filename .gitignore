@@ -1,0 +1,57 @@
+# --- Python 관련 ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# --- 가상환경 (가장 중요) ---
+.venv/
+venv/
+.env/
+env.bak/
+venv.bak/
+
+# --- Flask/환경 설정 ---
+.env
+.flaskenv
+instance/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# --- 데이터베이스 (SQLite 사용 시) ---
+*.db
+*.sqlite3
+
+# --- IDE 관련 ---
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# --- PyInstaller 빌드 결과물 ---
+bin/
+/dist/
+/build/
+*.spec
+
+# --- OS 관련 ---
+.DS_Store
+Thumbs.db

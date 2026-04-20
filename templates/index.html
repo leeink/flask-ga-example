@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}홈 - {{ site_name }}{% endblock %}
+{% block content %}
+
+<div>
+    <h1>{{ site_name }}에 오신 것을 환영합니다.</h1>
+    <form method="POST" action="{{ url_for('index') }}" onsubmit="gtag('event', 'submit_form')">
+        <p>아이디: <input type="text" id="email" name="email"></p>
+        <p>비밀번호: <input type="password" id="password" name="password"></p>
+        <input type="submit" value="Login">
+    </form>
+    <h2>{{ email }}</h2>
+    <div>
+        {% if result %}
+            <h2>{{ result[0]['name'] }}</h2>
+        {% else %}
+            <p>조회된 데이터가 없습니다.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
