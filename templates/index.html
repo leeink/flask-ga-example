@@ -10,13 +10,5 @@
         <p>비밀번호: <input type="password" id="password" name="password"></p>
         <input type="submit" value="Login">
     </form>
-    <h2>{{ email }}</h2>
-    <div>
-        {% if result %}
-            <h2>{{ result[0]['name'] }}</h2>
-        {% else %}
-            <p>조회된 데이터가 없습니다.</p>
-        {% endif %}
-    </div>
 </div>
 {% endblock %}

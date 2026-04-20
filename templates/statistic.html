@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}홈 - {{ site_name }}{% endblock %}
+{% block content %}
+    <form method="post" class="search-selection" action="{{ url_for('search') }}">
+        <select name="filter" id="filter">
+            <option value="" selected disabled hidden {% if not selected_filter %}selected{% endif %}>필터 조건 선택</option>
+            <option value="subtotal" {% if selected_filter == 'subtotal' %}selected{% endif %}>합계</option>
+            <option value="jongno_gu" {% if selected_filter == 'jongno_gu' %}selected{% endif %}>종로구</option>
+            <option value="jung_gu" {% if selected_filter == 'jung_gu' %}selected{% endif %}>중구</option>
+            <option value="yongsan_gu" {% if selected_filter == 'yongsan_gu' %}selected{% endif %}>용산구</option>
+            <option value="seongdong_gu" {% if selected_filter == 'seongdong_gu' %}selected{% endif %}>성동구</option>
+            <option value="gwangjin_gu" {% if selected_filter == 'gwangjin_gu' %}selected{% endif %}>광진구</option>
+            <option value="dongdaemun_gu" {% if selected_filter == 'dongdaemun_gu' %}selected{% endif %}>동대문구</option>
+            <option value="jungnang_gu" {% if selected_filter == 'jungnang_gu' %}selected{% endif %}>중랑구</option>
+            <option value="seongbuk_gu" {% if selected_filter == 'seongbuk_gu' %}selected{% endif %}>성북구</option>
+            <option value="gangbuk_gu" {% if selected_filter == 'gangbuk_gu' %}selected{% endif %}>강북구</option>
+            <option value="dobong_gu" {% if selected_filter == 'dobong_gu' %}selected{% endif %}>도봉구</option>
+            <option value="nowon_gu" {% if selected_filter == 'nowon_gu' %}selected{% endif %}>노원구</option>
+            <option value="eunpyeong_gu" {% if selected_filter == 'eunpyeong_gu' %}selected{% endif %}>은평구</option>
+            <option value="seodaemun_gu" {% if selected_filter == 'seodaemun_gu' %}selected{% endif %}>서대문구</option>
+            <option value="mapo_gu" {% if selected_filter == 'mapo_gu' %}selected{% endif %}>마포구</option>
+            <option value="yangcheon_gu" {% if selected_filter == 'yangcheon_gu' %}selected{% endif %}>양천구</option>
+            <option value="gangseo_gu" {% if selected_filter == 'gangseo_gu' %}selected{% endif %}>강서구</option>
+            <option value="guro_gu" {% if selected_filter == 'guro_gu' %}selected{% endif %}>구로구</option>
+            <option value="geumcheon_gu" {% if selected_filter == 'geumcheon_gu' %}selected{% endif %}>금천구</option>
+            <option value="yeongdeungpo_gu" {% if selected_filter == 'yeongdeungpo_gu' %}selected{% endif %}>영등포구</option>
+            <option value="dongjak_gu" {% if selected_filter == 'dongjak_gu' %}selected{% endif %}>동작구</option>
+            <option value="gwanak_gu" {% if selected_filter == 'gwanak_gu' %}selected{% endif %}>관악구</option>
+            <option value="seocho_gu" {% if selected_filter == 'seocho_gu' %}selected{% endif %}>서초구</option>
+            <option value="gangnam_gu" {% if selected_filter == 'gangnam_gu' %}selected{% endif %}>강남구</option>
+            <option value="songpa_gu" {% if selected_filter == 'songpa_gu' %}selected{% endif %}>송파구</option>
+            <option value="gangdong_gu" {% if selected_filter == 'gangdong_gu' %}selected{% endif %}>강동구</option>
+        </select>
+    </form>
+    <div>
+        <canvas id="pop-chart" width="800" height="400"></canvas>
+    </div>
+    <div>
+        <h3>정확도: {{ acc }}</h3>
+        <h3>오차: {{ rmse }}</h3>
+        <ul>
+            {% for p in pred %}
+                <li><p>예측 인구수: {{ p }}</p></li>
+        {% endfor %}
+        </ul>
+    </div>
+    <script>
+        document.getElementById('filter').addEventListener('change', function() {
+            this.form.submit();
+        });
+    </script>
+    <script>
+        const labels = [{% for row in data %}{{ row[0] }}{% if not loop.last %},{% endif %}{% endfor %}];
+        const values = [{% for row in data %}{{ row[1] }}{% if not loop.last %},{% endif %}{% endfor %}];
+
+        // --- 스타일링 ---
+        const tension = 0;              // 곡선 완만함
+        const legendPos = 'top';        // 범례 위치
+        const borderWidth = 4;           // 선의 굵기 (숫자가 클수록 굵어짐, 기본값은 보통 3)
+        const pointRadius = 5;           // 데이터 지점의 점 크기
+        const pointBorderWidth = 2;      // 점 테두리 두께
+        const pointHoverRadius = 8;      // 마우스를 올렸을 때 점의 크기
+
+        const datasets = labels.map((label, index) => {
+            return {
+                label: label,
+                data: values[index],
+                fill: false,
+                tension: tension,
+                borderWidth: borderWidth,
+                pointRadius: pointRadius,
+                pointBorderWidth: pointBorderWidth,
+                pointHoverRadius: pointHoverRadius,
+            }
+        })
+
+        const popCtx = document.getElementById('pop-chart').getContext('2d');
+        new Chart(popCtx, {
+            type: 'line',
+            data: {
+                labels: labels,   // x축: 연도 배열
+                datasets: [{
+                    label: '인구수',
+                    data: values,  // y축: 인구수 배열
+                    fill: false,
+                    tension: tension,
+                    borderWidth: borderWidth,
+                    pointRadius: pointRadius,
+                    pointBorderWidth: pointBorderWidth,
+                    pointHoverRadius: pointHoverRadius,
+                }]
+            },
+            options: {
+            responsive: true,
+            interaction:{
+                mode: 'index',
+                intersect: false,
+            },
+            plugins: {
+                legend: {position: legendPos},
+                title: {
+                    display: true,
+                    text: '연도별 인구수 추이'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function (value) {
+                            return value.toLocaleString() + '명';
+                        }
+                    }
+                }
+            }
+        }
+        })
+    </script>
+{% endblock %}
